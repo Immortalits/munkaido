@@ -36,16 +36,20 @@ const LoginPage = props => {
   };
 
   const register = async () => {
-    await signUp(email, password);
-    const initialUserData = {
-      name: userName,
-      email: email.toLocaleLowerCase(),
-      currentState: 'out',
-    };
-    createUserOnFirebase(initialUserData);
-    storeUserData(initialUserData);
-    props.setUserData(initialUserData);
-    console.log(`${userName} is stored during register process`);
+    if (password === passwordConfirm) {
+      await signUp(email, password);
+      const initialUserData = {
+        name: userName,
+        email: email.toLocaleLowerCase(),
+        currentState: 'out',
+      };
+      createUserOnFirebase(initialUserData);
+      storeUserData(initialUserData);
+      props.setUserData(initialUserData);
+      console.log(`${userName} is stored during register process`);
+    } else {
+      window.alert('A jelszavak nem egyeznek!');
+    }
   };
 
   return (
