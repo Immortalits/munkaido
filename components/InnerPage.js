@@ -30,6 +30,16 @@ function InnerPage(props) {
             />
           )}
         </Stack.Screen>
+        <Stack.Screen name="Beállítások">
+          {navigatorProps => (
+            <SettingsPage
+              {...navigatorProps}
+              setUserData={props.setUserData}
+              userData={props.userData}
+              toggleUserState={props.toggleUserState}
+            />
+          )}
+        </Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
   );
