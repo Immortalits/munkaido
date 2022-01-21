@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-import { signIn, signUp } from '../auth';
+import { signIn, signUp, resetPassword } from '../auth';
 import { createUserOnFirebase, getUserDataByEmail } from '../database';
 import { storeUserData } from '../localStorage';
 
@@ -49,6 +49,30 @@ const LoginPage = props => {
       console.log(`${userName} is stored during register process`);
     } else {
       window.alert('A jelszavak nem egyeznek!');
+    }
+  };
+
+  const validate = text => {
+    console.log(text);
+    const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+    if (reg.test(text) === false) {
+      console.log('Email is Not Correct');
+      return false;
+    } else {
+      console.log('Email is Correct');
+      return true;
+    }
+  };
+
+  const resPass = async () => {
+    if (!email) {
+      window.alert('Add meg az e-mail címed!');
+    } else {
+      if (validate(email)) {
+        resetPassword(email);
+      } else {
+        window.alert('Az e-mail cím nem megfelelő!');
+      }
     }
   };
 
@@ -94,6 +118,9 @@ const LoginPage = props => {
               secureTextEntry={true}
               onChangeText={setPassword}
             />
+            <TouchableOpacity onPress={resPass}>
+              <Text style={styles.forget_pass}>Elfelejtett jelszó</Text>
+            </TouchableOpacity>
             {isSignUpActive && (
               <TextInput
                 style={styles.input}
@@ -171,6 +198,13 @@ const styles = StyleSheet.create({
   },
   activeText: {
     color: '#ffffff',
+  },
+  forget_pass: {
+    marginLeft: 'auto',
+    fontSize: 10,
+    fontStyle: 'italic',
+    paddingBottom: 20,
+    paddingRight: 10,
   },
 });
 export default LoginPage;
