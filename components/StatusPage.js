@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Switch, TouchableOpacity, Image } from 'react-native';
 
 import { loginStatus, signOutUser } from '../auth';
@@ -8,10 +8,13 @@ import { storeUserData, removeUserData } from '../localStorage';
 export default function StatusPage(props) {
   // const [currentStatus, setCurrentStatus] = useState(false);
 
+  const [link, setLink] = useState('');
+
   const toggleSwitch = () => {
     const newState = props.toggleUserState();
     // a props.userData.currentState itt még nem használható ezért inkább a toggleUserState
     // visszatérési értékét használjuk!
+    generateImage();
     saveHistoryOnFirebase(props.userData.email, newState);
     // setCurrentStatus(previousState => !previousState);
   };
@@ -22,8 +25,21 @@ export default function StatusPage(props) {
     props.setUserData(null);
   };
 
+  // https://stackoverflow.com/questions/39021870/fetch-returns-promise-instead-of-actual-data-even-after-using-then
+  const generateImage = async () => {
+    fetch('https://inspirobot.me/api?generate=true')
+      .then(response => response.text())
+      .then(data => {
+        setLink(data);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
+
   useEffect(() => {
     (async () => {
+      generateImage();
       const firebaseUser = await loginStatus();
       const userData = await getUserDataByEmail(firebaseUser.email);
       await storeUserData(userData);
@@ -55,6 +71,10 @@ export default function StatusPage(props) {
         style={[styles.button, styles.shadow]}>
         <Text style={styles.buttonText}>Napló megtekintése</Text>
       </TouchableOpacity>
+
+      <View>
+        <Image style={styles.image} source={{ uri: link }} />
+      </View>
     </View>
   );
 }
@@ -108,5 +128,10 @@ const styles = StyleSheet.create({
     shadowOffset: { width: -2, height: 4 },
     shadowOpacity: 0.2,
     shadowRadius: 3,
+  },
+  image: {
+    width: 400,
+    height: 400,
+    resizeMode: 'contain',
   },
 });
