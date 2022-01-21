@@ -1,0 +1,39 @@
+{
+  "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "eject": "expo eject",
+    "lint": "eslint"
+  },
+  "name": "rn-munkaido-firebase",
+  "version": "1.0.0",
+  "author": "Zsolt Lengyel <zsolt.lengyel21@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "7.32.0",
+    "eslint-config-universe": "^8.0.0",
+    "eslint-plugin-auto-import": "^0.1.1",
+    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react-native": "^3.11.0",
+    "prettier": "^2.4.1"
+  },
+  "dependencies": {
+    "@react-native-async-storage/async-storage": "^1.15.11",
+    "@react-native-community/datetimepicker": "3.5.2",
+    "@react-navigation/native": "^6.0.6",
+    "@react-navigation/native-stack": "^6.2.5",
+    "expo": "^43.0.3",
+    "firebase": "^9.4.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-native": "0.64.3",
+    "react-native-keyboard-aware-scroll-view": "^0.9.5",
+    "react-native-safe-area-context": "3.3.2",
+    "react-native-screens": "~3.8.0",
+    "react-native-svg": "12.1.1"
+  }
+}
