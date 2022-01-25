@@ -1,11 +1,29 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, FlatList } from 'react-native';
+import { StyleSheet, View, Text, FlatList, TouchableOpacity, Alert } from 'react-native';
+import SvgXml from 'react-native-svg';
 
-import { getHistory } from '../database';
+import trashIcon from '../assets/Trash_font_awesome';
+import { getHistory, deleteHistoryById } from '../database';
 
 export default function HistoryPage(props) {
   const [history, setHistory] = useState([]);
 
+  const deleteItem = () => {
+    deleteHistoryById(props.userData.email, 0);
+
+    const newArray = history.splice(0, 1);
+    setHistory(newArray);
+  };
+
+  const createTwoButtonAlert = () => {
+    Alert.alert('Biztos hogy töröljem?', 'Biztos hogy töröljem?', [
+      {
+        text: 'Cancel',
+        onPress: () => console.log('Cancel Pressed'),
+      },
+      { text: 'Törlés', onPress: () => deleteItem },
+    ]);
+  };
   const renderItem = ({ item, index }) => (
     <View
       style={[
@@ -14,14 +32,30 @@ export default function HistoryPage(props) {
         item.state === 'in' ? styles.containerIn : styles.containerOut,
       ]}>
       <View style={styles.historyTextContainer}>
-        <Text style={styles.currentStateText}>{item.date.toDate().toLocaleString('hu-HU')}</Text>
-        <Text
-          style={[
-            styles.currentStateText,
-            item.state === 'in' ? styles.currentStateTextIn : styles.currentStateTextOut,
-          ]}>
-          {item.state === 'in' ? 'bejött' : 'távozott'}
-        </Text>
+        <View>
+          <Text style={styles.currentStateText}>{item.date.toDate().toLocaleString('hu-HU')}</Text>
+          <Text
+            style={[
+              styles.currentStateText,
+              item.state === 'in' ? styles.currentStateTextIn : styles.currentStateTextOut,
+            ]}>
+            {item.state === 'in' ? 'bejött' : 'távozott'}
+          </Text>
+        </View>
+        <View>
+          {(() => {
+            if (index === 0) {
+              return (
+                <TouchableOpacity onPress={createTwoButtonAlert}>
+                  <SvgXml xml={trashIcon} />
+                  <Text style={styles.deleteText}>Törlés</Text>
+                </TouchableOpacity>
+              );
+            }
+
+            return null;
+          })()}
+        </View>
       </View>
     </View>
   );
@@ -35,7 +69,7 @@ export default function HistoryPage(props) {
   }, []);
   return (
     <View style={styles.container}>
-      <FlatList data={history} renderItem={renderItem} keyExtractor={item => item.id} />
+      <FlatList data={history} renderItem={renderItem} keyExtractor={(item, index) => index} />
     </View>
   );
 }
@@ -72,5 +106,10 @@ const styles = StyleSheet.create({
     shadowOffset: { width: -2, height: 4 },
     shadowOpacity: 0.2,
     shadowRadius: 3,
+  },
+  deleteText: {
+    color: 'red',
+    fontSize: 20,
+    fontWeight: 'bold',
   },
 });
